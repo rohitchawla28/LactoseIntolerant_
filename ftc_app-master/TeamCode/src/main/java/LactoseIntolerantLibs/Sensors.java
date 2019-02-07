@@ -13,8 +13,8 @@ public class Sensors {
 
     private LinearOpMode opMode;
 
-    public BNO055IMU gyro;
-    private  Orientation angles;
+    private BNO055IMU gyro;
+    private Orientation angles;
 
     public Sensors(LinearOpMode opMode, boolean IMUenabled) {
         this.opMode = opMode;
@@ -42,19 +42,9 @@ public class Sensors {
 
     }
 
-    public void updateGyroR() {
-        angles = gyro.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
-
-    }
-
     public double getGyroYaw() {
         updateGyroValues();
         return angles.firstAngle;
-
-    }
-
-    public double getGyroYawR() {
-        return -angles.firstAngle;
 
     }
 
