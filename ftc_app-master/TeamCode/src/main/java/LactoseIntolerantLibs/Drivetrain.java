@@ -140,6 +140,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
         }
 
+        public void strafeEncoder() {
+
+
+        }
+
+        public void diagonalEncoder() {
+
+        }
+
         // =========================================  PID  =============================================
 
         public void turnPID(double kP, double kI, double kD, double angle, boolean right, double timeout) {
