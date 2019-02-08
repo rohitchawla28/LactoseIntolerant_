@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
     public class Drivetrain {
 
         private LinearOpMode opMode;
-        private Sensors sensors;
+        private Gyro gyro;
 
         private DcMotor fl;
         private DcMotor fr;
@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
         public Drivetrain(LinearOpMode opMode) {
             this.opMode = opMode;
 
-            sensors = new Sensors(opMode, true);
+            gyro = new Gyro(opMode, true);
 
             fl = opMode.hardwareMap.dcMotor.get("fl");
             fr = opMode.hardwareMap.dcMotor.get("fr");
@@ -156,7 +156,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
             time.reset();
 
-            double initialAngle = sensors.getGyroYaw();
+            double initialAngle = gyro.getGyroYaw();
 
             double error;
             double power;
@@ -166,11 +166,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
             double derivative;
 
             double previousTime;
-            double previousError = angle - Math.abs(sensors.getGyroYaw() - initialAngle);
+            double previousError = angle - Math.abs(gyro.getGyroYaw() - initialAngle);
 
-            while (Math.abs(sensors.getGyroYaw() - (angle + initialAngle)) > 1 && time.seconds() < timeout && opMode.opModeIsActive()) {
+            while (Math.abs(gyro.getGyroYaw() - (angle + initialAngle)) > 1 && time.seconds() < timeout && opMode.opModeIsActive()) {
                 // need absolute val?
-                error = angle - Math.abs(sensors.getGyroYaw() - initialAngle);
+                error = angle - Math.abs(gyro.getGyroYaw() - initialAngle);
 
                 previousTime = time.seconds();
 
