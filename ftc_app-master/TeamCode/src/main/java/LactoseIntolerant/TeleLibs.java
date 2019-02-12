@@ -35,6 +35,10 @@ public abstract class TeleLibs extends OpMode {
 
     }
 
+    public void FullSend() {
+
+    }
+
     public void arcadeDrive() {
         //checking for valid range to apply power (has to give greater power than .1)
         if (((Math.abs(Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y))) > .1) ||

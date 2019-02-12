@@ -1,13 +1,14 @@
 package LactoseIntolerantLibs;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
     public class Drivetrain {
 
-        private LinearOpMode opMode;
+        private OpMode opMode;
         private Gyro gyro;
 
         private DcMotor fl;
@@ -15,7 +16,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
         private DcMotor bl;
         private DcMotor br;
 
-        public Drivetrain(LinearOpMode opMode) {
+        public Drivetrain(OpMode opMode) {
             this.opMode = opMode;
 
             gyro = new Gyro(opMode, true);
@@ -41,31 +42,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
         public void resetEncoders() {
             fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            opMode.idle();
             fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            opMode.idle();
             bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            opMode.idle();
             br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            opMode.idle();
-
             fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            opMode.idle();
             fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            opMode.idle();
             bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            opMode.idle();
             br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            opMode.idle();
-
         }
 
-        public void startMotors(double power) {
+        public void setPower(double power) {
             fl.setPower(power);
             fr.setPower(power);
             bl.setPower(power);
             br.setPower(power);
-
         }
 
         public void turn(double power, boolean right) {
@@ -132,9 +122,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
             resetEncoders();
             time.reset();
 
-            while (getEncoderAvg() < distance && time.seconds() < timeout && opMode.opModeIsActive()) {
-                startMotors(power);
-
+            while (getEncoderAvg() < distance && time.seconds() < timeout) {
+                setPower(power);
             }
             stopMotors();
 
@@ -168,7 +157,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
             double previousTime;
             double previousError = angle - Math.abs(gyro.getGyroYaw() - initialAngle);
 
-            while (Math.abs(gyro.getGyroYaw() - (angle + initialAngle)) > 1 && time.seconds() < timeout && opMode.opModeIsActive()) {
+            while (Math.abs(gyro.getGyroYaw() - (angle + initialAngle)) > 1 && time.seconds() < timeout) {
                 // need absolute val?
                 error = angle - Math.abs(gyro.getGyroYaw() - initialAngle);
 
@@ -190,7 +179,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
                 previousError = error;
 
-                opMode.idle();
 
             }
             stopMotors();

@@ -3,17 +3,19 @@ package LactoseIntolerantLibs;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class Gyro {
 
-    private LinearOpMode opMode;
+    private OpMode opMode;
 
     private BNO055IMU gyro;
     private Orientation angles;
 
-    public Gyro(LinearOpMode opMode, boolean IMUenabled) {
+    public Gyro(OpMode opMode, boolean IMUenabled) {
         this.opMode = opMode;
 
         if (IMUenabled){
@@ -28,7 +30,6 @@ public class Gyro {
 
             gyro = this.opMode.hardwareMap.get(BNO055IMU.class, "imu");
             gyro.initialize(parameters);
-
         }
 
     }
@@ -37,6 +38,10 @@ public class Gyro {
     public void updateGyroValues() {
         angles = gyro.getAngularOrientation();
 
+    }
+
+    public Acceleration getAcceleration() {
+        return gyro.getAcceleration();
     }
 
     public double getGyroYaw() {
