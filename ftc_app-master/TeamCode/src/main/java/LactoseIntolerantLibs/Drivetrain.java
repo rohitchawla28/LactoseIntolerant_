@@ -1,14 +1,13 @@
 package LactoseIntolerantLibs;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
     public class Drivetrain {
 
-        private OpMode opMode;
+        private LinearOpMode opMode;
         private Gyro gyro;
 
         private DcMotor fl;
@@ -16,7 +15,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
         private DcMotor bl;
         private DcMotor br;
 
-        public Drivetrain(OpMode opMode) {
+        public Drivetrain(LinearOpMode opMode) {
             this.opMode = opMode;
 
             gyro = new Gyro(opMode, true);
@@ -42,13 +41,23 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
         public void resetEncoders() {
             fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            opMode.idle();
             fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            opMode.idle();
             bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            opMode.idle();
             br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            opMode.idle();
+
             fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            opMode.idle();
             fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            opMode.idle();
             bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            opMode.idle();
             br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            opMode.idle();
+
         }
 
         public void setPower(double power) {
@@ -56,6 +65,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
             fr.setPower(power);
             bl.setPower(power);
             br.setPower(power);
+
+        }
+
+        public void stopMotors() {
+            fl.setPower(0);
+            fr.setPower(0);
+            bl.setPower(0);
+            br.setPower(0);
+
         }
 
         public void turn(double power, boolean right) {
@@ -79,13 +97,38 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
         }
 
-        public void stopMotors() {
-            fl.setPower(0);
-            fr.setPower(0);
-            bl.setPower(0);
-            br.setPower(0);
+        public void strafe(double power, boolean right) {
+            if (right) {
+                fl.setPower(-power);
+                fr.setPower(power);
+                bl.setPower(power);
+                br.setPower(-power);
+
+            }
+            else {
+                fl.setPower(power);
+                fr.setPower(-power);
+                bl.setPower(-power);
+                br.setPower(power);
+
+            }
 
         }
+
+        public void diagonal(double power, boolean right) {
+            if (right) {
+                fr.setPower(power);
+                bl.setPower(power);
+
+            }
+            else {
+                fl.setPower(power);
+                br.setPower(power);
+
+            }
+
+        }
+
 
         // =======================================  Encoder  ===========================================
 
@@ -122,19 +165,39 @@ import com.qualcomm.robotcore.util.ElapsedTime;
             resetEncoders();
             time.reset();
 
-            while (getEncoderAvg() < distance && time.seconds() < timeout) {
+            while (getEncoderAvg() < distance && time.seconds() < timeout && opMode.opModeIsActive()) {
                 setPower(power);
+
             }
             stopMotors();
 
         }
 
-        public void strafeEncoder() {
+        public void strafeEncoder(double power, double distance, boolean right, double timeout) {
+            ElapsedTime time = new ElapsedTime();
 
+            resetEncoders();
+            time.reset();
+
+            while (getEncoderAvg() < distance && time.seconds() < timeout && opMode.opModeIsActive()) {
+                strafe(power, right);
+
+            }
+            stopMotors();
 
         }
 
-        public void diagonalEncoder() {
+        public void diagonalEncoder(double power, double distance, boolean right, double timeout) {
+            ElapsedTime time = new ElapsedTime();
+
+            resetEncoders();
+            time.reset();
+
+            while (getEncoderAvg() < distance && time.seconds() < timeout && opMode.opModeIsActive()) {
+                diagonal(power, right);
+
+            }
+            stopMotors();
 
         }
 
@@ -178,6 +241,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
                 opMode.telemetry.addData("Derivative", derivative);
 
                 previousError = error;
+
+                opMode.idle();
 
 
             }
