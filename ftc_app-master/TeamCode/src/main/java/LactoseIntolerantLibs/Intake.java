@@ -21,20 +21,22 @@ public class Intake {
     private CRServo collectR;
 
     public Intake (LinearOpMode opMode) {
-        intakeL = opMode.hardwareMap.dcMotor.get("intakeL");
-        intakeR = opMode.hardwareMap.dcMotor.get("intakeR");
+        //EVERYTHING EXCEPT FOR PIVOT IS COMMENTED B/C OF WHAT'S ON THE ROBOT RN
+        // TODO: 3/11/2019 Wire all parts of robot, and start testing all mechanisms
+//        intakeL = opMode.hardwareMap.dcMotor.get("intakeL");
+//        intakeR = opMode.hardwareMap.dcMotor.get("intakeR");
 
         pivotL = opMode.hardwareMap.servo.get("pivotL");
         pivotR = opMode.hardwareMap.servo.get("pivotR");
 
-        collectL = opMode.hardwareMap.crservo.get("collectL");
-        collectR = opMode.hardwareMap.crservo.get("collectR");
-
-        intakeL.setDirection(DcMotorSimple.Direction.FORWARD);
-        intakeR.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        collectL.setDirection(DcMotorSimple.Direction.FORWARD);
-        collectR.setDirection(DcMotorSimple.Direction.REVERSE);
+//        collectL = opMode.hardwareMap.crservo.get("collectL");
+//        collectR = opMode.hardwareMap.crservo.get("collectR");
+//
+//        intakeL.setDirection(DcMotorSimple.Direction.FORWARD);
+//        intakeR.setDirection(DcMotorSimple.Direction.REVERSE);
+//
+//        collectL.setDirection(DcMotorSimple.Direction.FORWARD);
+//        collectR.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
 
@@ -89,5 +91,21 @@ public class Intake {
         collectR.setPower(0);
 
     }
+
+    public void setPivotPos(double left, double right)
+    {
+        pivotL.setPosition(left);
+        pivotR.setPosition(right);
+    }
+
+    public double getPivotLPos()
+    {
+        return pivotL.getPosition();
+    }
+    public double getPivotRPos()
+    {
+        return pivotR.getPosition();
+    }
+
 
 }
