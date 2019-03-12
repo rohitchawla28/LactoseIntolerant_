@@ -239,7 +239,7 @@ public abstract class TeleLibs extends OpMode {
     }
 
     public double getIntakeEncoder() {
-        return ((intakeL.getCurrentPosition() + intakeR.getCurrentPosition()) / 2)
+        return ((intakeL.getCurrentPosition() + intakeR.getCurrentPosition()) / 2);
 
     }
 
