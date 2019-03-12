@@ -67,37 +67,6 @@ public abstract class TeleLibs extends OpMode {
 
     }
 
-    public void actuator() {
-        boolean dpad_Up = gamepad2.dpad_up;
-        boolean dpad_down = gamepad2.dpad_down;
-
-        if(dpad_Up)
-            actuator.setPower(1);
-        else if (dpad_down)
-            actuator.setPower(-1);
-        else
-            actuator.setPower(0);
-    }
-
-    public void intakeSlides()
-    {
-        double left_trigger = gamepad1.left_trigger;
-        double right_trigger = gamepad1.right_trigger;
-
-        if (left_trigger > 0.05) {
-            //the right intake slide is set to reverse, may have to change that
-            intakeL.setPower(-left_trigger);
-            intakeR.setPower(-left_trigger);
-        } else if (right_trigger > 0.05) {
-            intakeL.setPower(right_trigger);
-            intakeR.setPower(right_trigger);
-        } else {
-            intakeL.setPower(0);
-            intakeR.setPower(0);
-        }
-
-    }
-
     public void arcadeDrive() {
         //checking for valid range to apply power (has to give greater power than .1)
         if (((Math.abs(Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y))) > .1) ||
@@ -136,4 +105,62 @@ public abstract class TeleLibs extends OpMode {
         }
 
     }
+
+    public void intakeSlides() {
+        double left_trigger = gamepad1.left_trigger;
+        double right_trigger = gamepad1.right_trigger;
+
+        if (left_trigger > 0.05) {
+            //the right intake slide is set to reverse, may have to change that
+            intakeL.setPower(-left_trigger);
+            intakeR.setPower(-left_trigger);
+
+        }
+        else if (right_trigger > 0.05) {
+            intakeL.setPower(right_trigger);
+            intakeR.setPower(right_trigger);
+
+        }
+        else {
+            intakeL.setPower(0);
+            intakeR.setPower(0);
+
+        }
+
+    }
+
+    public void outputSlides() {
+        double outputPower = gamepad2.right_stick_y;
+
+        if (Math.abs(outputPower) > 0.08) {
+            output.setPower(outputPower);
+
+        }
+        else {
+            output.setPower(0);
+
+        }
+
+    }
+
+    public void actuator() {
+        boolean dpad_Up = gamepad2.dpad_up;
+        boolean dpad_down = gamepad2.dpad_down;
+
+        if (dpad_Up) {
+            actuator.setPower(1);
+
+        }
+        else if (dpad_down) {
+            actuator.setPower(-1);
+
+        }
+        else {
+            actuator.setPower(0);
+
+        }
+
+    }
+
+
 }

@@ -17,7 +17,6 @@ public class Actuator {
 
         actuator = opMode.hardwareMap.dcMotor.get("actuator");
 
-
         actuator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }

@@ -7,10 +7,12 @@ import LactoseIntolerantLibs.Intake;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name = "ServoTest", group = "Auto")
+@Autonomous
+        (name = "ServoTest", group = "Auto")
 
 public class ServoTest extends LinearOpMode {
     Intake intake;
+
     @Override
     public void runOpMode() throws InterruptedException {
 
