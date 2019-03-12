@@ -243,11 +243,11 @@ public class Drivetrain {
 
             turn(power, right);
 
-            opMode.telemetry.addData("Power", power);
-            opMode.telemetry.addData("Error", error);
-            opMode.telemetry.addData("Proportional", proportional);
-            opMode.telemetry.addData("Integral", integral);
-            opMode.telemetry.addData("Derivative", derivative);
+            opMode.telemetry.addData("power", power);
+            opMode.telemetry.addData("error", error);
+            opMode.telemetry.addData("proportional", proportional);
+            opMode.telemetry.addData("integral", integral);
+            opMode.telemetry.addData("derivative", derivative);
 
             previousError = error;
 

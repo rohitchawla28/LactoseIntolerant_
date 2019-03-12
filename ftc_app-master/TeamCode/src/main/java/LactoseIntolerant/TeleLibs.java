@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public abstract class TeleLibs extends OpMode {
 
@@ -28,9 +29,16 @@ public abstract class TeleLibs extends OpMode {
 
     private Servo deposit;
 
+    private Thread retractThread;
+    private Thread scoreThread;
+
+    private double intakeInitEncoder;
+    private double outputInitEncoder;
+    private boolean readyToScore;
+
     @Override
     public void init() {
-        //MOTOR INITIALZATION
+        // MOTOR INITIALZATION
         fl = hardwareMap.dcMotor.get("fl");
         fr = hardwareMap.dcMotor.get("fr");
         bl = hardwareMap.dcMotor.get("bl");
@@ -52,7 +60,7 @@ public abstract class TeleLibs extends OpMode {
         intakeR.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
-        //SERVO INITIALIZATION
+        // SERVO INITIALIZATION
         pivotL = hardwareMap.servo.get("pivotL");
         pivotR = hardwareMap.servo.get("pivotR");
         deposit = hardwareMap.servo.get("outputServo");
@@ -61,11 +69,110 @@ public abstract class TeleLibs extends OpMode {
         //collectL = hardwareMap.crservo.get("collectL");
         //collectR = hardwareMap.crservo.get("collectR");
 
+        fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        intakeL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intakeR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        output.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        intakeInitEncoder = getIntakeEncoder();
+        readyToScore = false;
+
+        // initializing threads
+        retractThread = new Thread(retract);
+        scoreThread = new Thread(score);
+
+        telemetry.addData("Intake encoder", intakeInitEncoder);
 
         telemetry.addLine("Initialized");
         telemetry.update();
 
     }
+
+    // =====================================  RUNNABLES  ===========================================
+
+    public Runnable retract = new Runnable() {
+        @Override
+        public void run() {
+            if (gamepad2.b) {
+                 while (-getIntakeEncoder() < 0) {
+                     intakeL.setPower(-1);
+                     intakeR.setPower(-1);
+
+                 }
+                 intakeL.setPower(0);
+                 intakeR.setPower(0);
+
+                 pivotL.setPosition(0.5); //TODO TEST CONSTANT
+                 pivotR.setPosition(0.5); // TODO TEST CONSTANT
+
+                ElapsedTime time = new ElapsedTime();
+
+                while (time.seconds() < 0.5) {
+                    collectL.setPower(0.7);
+                    collectR.setPower(0.7);
+
+                }
+                collectL.setPower(0);
+                collectR.setPower(0);
+
+                readyToScore = true;
+
+                Thread.currentThread().interrupt();
+
+            }
+
+        }
+    };
+
+    public Runnable score = new Runnable() {
+        @Override
+        public void run() {
+            if (readyToScore) {
+                outputInitEncoder = output.getCurrentPosition();
+
+                while (Math.abs(output.getCurrentPosition() - outputInitEncoder) < 1000) { //TODO TEST CONSTANT
+                    output.setPower(1);
+
+                }
+                output.setPower(0);
+
+                deposit.setPosition(0.5); //TODO TEST CONSTANT
+
+                outputInitEncoder = output.getCurrentPosition();
+                while (Math.abs(output.getCurrentPosition() - outputInitEncoder) < 1000) { //TODO TEST CONSTANT
+                    output.setPower(-1);
+
+                }
+                output.setPower(0);
+
+            }
+            readyToScore = false;
+
+            Thread.currentThread().interrupt();
+
+        }
+    };
+
+    @Override
+    public void stop() {
+        retractThread.interrupt();
+        scoreThread.interrupt();
+
+    }
+
+    @Override
+    public void start() {
+        retractThread.start();
+        scoreThread.start();
+
+    }
+
+
+    // =======================================  DRIVE  =============================================
 
     public void arcadeDrive() {
         //checking for valid range to apply power (has to give greater power than .1)
@@ -106,6 +213,8 @@ public abstract class TeleLibs extends OpMode {
 
     }
 
+    // =======================================  INTAKE  ============================================
+
     public void intakeSlides() {
         double left_trigger = gamepad1.left_trigger;
         double right_trigger = gamepad1.right_trigger;
@@ -129,6 +238,29 @@ public abstract class TeleLibs extends OpMode {
 
     }
 
+    public double getIntakeEncoder() {
+        return ((intakeL.getCurrentPosition() + intakeR.getCurrentPosition()) / 2)
+
+    }
+
+    public void collect() {
+        if (gamepad2.left_bumper) {
+            collectL.setPower(0.7);
+            collectR.setPower(0.7);
+
+        }
+        else if (gamepad2.right_bumper) {
+            collectL.setPower(-0.7);
+            collectR.setPower(-0.7);
+
+        }
+        collectL.setPower(0);
+        collectR.setPower(0);
+
+    }
+
+    // ==========================================  OUTPUT  =========================================
+
     public void outputSlides() {
         double outputPower = gamepad2.right_stick_y;
 
@@ -142,6 +274,8 @@ public abstract class TeleLibs extends OpMode {
         }
 
     }
+
+    // ==========================================  ACTUATOR  =======================================
 
     public void actuator() {
         boolean dpad_Up = gamepad2.dpad_up;
