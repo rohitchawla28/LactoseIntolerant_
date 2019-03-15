@@ -7,10 +7,10 @@ public class TeleOP extends TeleLibs {
 
     public void loop() {
         arcadeDrive();
-        actuator();
+        //actuator();
         intakeSlides();
-        outputSlides();
-        collect();
+        //outputSlides();
+        //collect();
 
     }
 }
