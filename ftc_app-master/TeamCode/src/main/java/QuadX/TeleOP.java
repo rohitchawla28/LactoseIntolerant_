@@ -1,4 +1,4 @@
-package LactoseIntolerant;
+package QuadX;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 

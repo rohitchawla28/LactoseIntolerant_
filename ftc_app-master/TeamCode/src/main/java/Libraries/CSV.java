@@ -1,4 +1,4 @@
-package LactoseIntolerantLibs;
+package Libraries;
 
 import java.io.File;
 import java.io.PrintWriter;
