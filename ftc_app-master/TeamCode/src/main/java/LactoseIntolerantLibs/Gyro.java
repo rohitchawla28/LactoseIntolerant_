@@ -1,4 +1,4 @@
-package Libraries;
+package LactoseIntolerantLibs;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;

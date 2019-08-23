@@ -1,4 +1,4 @@
-package Libraries;
+package LactoseIntolerantLibs;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;

@@ -1,4 +1,4 @@
-package QuadX;
+package LactoseIntolerant;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -39,10 +39,10 @@ public abstract class TeleLibs extends OpMode {
     @Override
     public void init() {
         // MOTOR INITIALZATION
-        fl = hardwareMap.dcMotor.get("fl"); //0
-        fr = hardwareMap.dcMotor.get("fr"); //2
-        bl = hardwareMap.dcMotor.get("bl"); //1
-        br = hardwareMap.dcMotor.get("br"); //3
+        fl = hardwareMap.dcMotor.get("fl");
+        fr = hardwareMap.dcMotor.get("fr");
+        bl = hardwareMap.dcMotor.get("bl");
+        br = hardwareMap.dcMotor.get("br");
 
         //actuator = hardwareMap.dcMotor.get("actuator");
 

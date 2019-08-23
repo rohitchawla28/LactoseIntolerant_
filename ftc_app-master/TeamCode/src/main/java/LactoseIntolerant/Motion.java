@@ -1,4 +1,4 @@
-package QuadX;
+package LactoseIntolerant;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
